@@ -29,3 +29,12 @@ SSTV MCU can be commanded through APRS commands. If no command is received durin
 Any APRS command addressed to PSAT-2CAM call will change the mode to *manual*. In this mode, the MCU listens for instructions divided by its subsystems. Example command: *OK2ALP>APRSAT,ARISS::PSAT-2CAM:CW.hello from psat2 cubesat*.
 
 Commands without consequent audio output are acknowledged in downlink with Morse code. Possible answers are *PSAT2 RRR* (roger, command successful), *PSAT2 EEEEE* (syntax error) and *PSAT2 EEE AUTH* (not authorized, some commands are restricted and require authorization).
+
+## Interesting commands for start
+* CW.hello from space – Send message in Morse.
+* PSK.hello from space – Send message in PSK31.
+* SSTV.LIVE.36 – Take image from camera and send it in Robot36 format.
+* SSTV.ROM.73.5 – Send hardcoded image #5 in MP73 format.
+* PSK.NVINFO.125 – Send debug counters of events and errors in PSK125.
+
+More commands and details will be added after successful deployment and initial testing of the satellite.
