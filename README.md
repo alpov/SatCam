@@ -10,12 +10,14 @@ The main function of the transponder is to receive PSK signals from 29.48 MHz up
 
 The PSK board switches between modes A to D according to available power. Battery voltage is checked periodically and after each transmitted character. If it crosses a boundary, the mode is switched. Moreover, if the voltage falls below a critical limit, the transmission is stopped immediately. This behavior can be observed in mode D, when only a part of the telemetry is transmitted.
 
-All operations are limited to Sun detection, which is controlled by SUNWIRE signal. The SUNWIRE is fail-safe checked by state machine. After MCU reboot, the Sun signal is always high. It goes low after falling edge on SUNWIRE. If the SUNWIRE is low for more than 30 minutes, it is set to high automatically, otherwise with rising edge on SUNWIRE.
+All operations are limited to Sun detection, which is controlled by SUNWIRE signal. The SUNWIRE is fail-safe checked by state machine. After MCU reboot, the Sun signal is always high. It goes low after falling edge on SUNWIRE. If the SUNWIRE is low for more than 30 minutes, it is set to high automatically, otherwise with rising edge on SUNWIRE. Interconnects between both boards and PSAT-2 are shown [in a block diagram](Docs/psk_sstv_interconnect.png).
 
 Communication is divided into 20sec time slots. There are 6 slots for modes A/B/C, and 9 slots for mode D. The telemetry is transmitted in every 1st slot or if PSK uplink is detected. Additionally, an SSTV image or telemetry is added to the transmitted signal. The time slots do not affect the PSK transponder function, so there is no need to fit with the PSK uplink signal into a time window. However, advanced functions such as commanding, telemetry and SSTV, are synchronized into these windows.
 
 The transponder can be commanded by two uplink channels. Only APRS subsystem commanding channel, operating at 145.980 MHz (digipeater OFF) or 145.825 MHz (digipeater ON), is available to general public. Special commanding callsign of transponder subsystem is *PSAT-2CAM*.
- 
+
+![Transponder modes](Docs/transponder_modes.png)
+
 ## Telemetry streams
 The PSK MCU generates telemetry data in PSK31 format, which is transmitted on 435.350 MHz, carrier at 374 Hz. This telemetry consists of current and historical frame. Current frame contains frame counter, reboot counter, values of PSK level, AGC, battery voltage, 5V voltage, current, RX temperature, and several period counter values. History frame is pseudo-randomly selected from memory and contains the same information except for period counters. Example telemetry frame: *PSAT-2 C apng eFaaijtkpokoaB aaaa A aokF eEadjluappjxay*. Such frame can be decoded with the provided PHP decoder.
 
