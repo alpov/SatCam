@@ -164,6 +164,7 @@ void printf_debug(const char *format, ...)
 }
 
 
+/* FIXME: This is not always called - bug in HAL? Better to test DMAR every time => call comm_init() periodically */
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     /* restart DMA ring buffer RX after any error */
