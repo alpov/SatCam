@@ -14,7 +14,7 @@ All operations are limited to Sun detection, which is controlled by SUNWIRE sign
 
 Communication is divided into 20sec time slots. There are 6 slots for modes A/B/C, and 9 slots for mode D. The telemetry is transmitted in every 1st slot or if PSK uplink is detected. Additionally, an SSTV image or telemetry is added to the transmitted signal. The time slots do not affect the PSK transponder function, so there is no need to fit with the PSK uplink signal into a time window. However, advanced functions such as commanding, telemetry and SSTV, are synchronized into these windows.
 
-The transponder can be commanded by two uplink channels. Only APRS subsystem commanding channel, operating at 145.980 MHz (digipeater OFF) or 145.825 MHz (digipeater ON), will be available to general public.
+Users will be able to command these functions after the system has been successfully activated in space and we have completed successful checkout.
 
 ![Transponder modes](Docs/transponder_modes.png)
 
