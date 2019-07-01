@@ -10,7 +10,7 @@ This repository hosts public parts of two boards from [PSAT2](http://www.aprs.or
 
 * [Gallery of decoded SSTV images](http://www.urel.feec.vutbr.cz/esl/psat2/sstv/)
 
-* [Online telemetry decoder](http://www.urel.feec.vutbr.cz/esl/psat2/psat2tlm.php) (customised: [no_save](http://www.urel.feec.vutbr.cz/esl/psat2/tlm.php), [to_excel](http://www.urel.feec.vutbr.cz/esl/psat2/tlm2.php))
+* [Online telemetry decoder](http://www.urel.feec.vutbr.cz/esl/psat2/psat2tlm.php)
 
 * [Decoded telemetry of PSK and SSTV boards](https://docs.google.com/spreadsheets/d/1X_4X0AgCshNDFIrDecOif41eRRwNzOKZwRn9tjI5_hs/edit?usp=sharing)
 
