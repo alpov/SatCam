@@ -1,6 +1,6 @@
 # PSAT-2 PSK/SSTV transponder
 
-This repository hosts public parts of two boards from [PSAT2](http://www.aprs.org/psat2.html), a 2U CubeSat by US Naval Academy. These boards were developed at Dept. of Radio Electronics, Brno University of Technology, Czech Republic. The source files do not include authorization codes for SSTV and uplink commanding for PSK transponder.
+This repository hosts public parts of two boards from [PSAT2](http://www.aprs.org/psat2.html), a 1.5U CubeSat by US Naval Academy. These boards were developed at Dept. of Radio Electronics, Brno University of Technology, Czech Republic. The source files do not include authorization codes for SSTV and uplink commanding for PSK transponder.
 
 **PSK transponder board** is an updated version of the PSK transponder with beacon and telemetry, used on [PSAT](http://www.aprs.org/psat.html) and [BRICSAT-1](http://www.aprs.org/bricsat-1.html). Transponder documentation available for [PSAT](http://www.urel.feec.vutbr.cz/esl/files/Projects/PSAT/P%20sat%20transponder%20WEB%20spec02.htm) and [BRICSAT-1](http://www.urel.feec.vutbr.cz/esl/files/Projects/BRICsat/Bricsat%20transponder%20WEB%20spec02.htm).
 
