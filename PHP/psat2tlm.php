@@ -4,14 +4,27 @@
 
 <?php
 
+setlocale(LC_NUMERIC, 'cs_CZ');
+
 if (isset($_GET['tlm'])) $tlm = $_GET['tlm'];
 else $tlm = "";
+
+if (isset($_GET['comment'])) $comment = $_GET['comment'];
+else $comment = "";
 
 ?>
 
 <form name="form" action="" method="get">
-  <input type="text" name="tlm" id="tlm" value="<?php echo $tlm; ?>" size=80>
-  <input type="submit">
+  <table>
+  <tr><td valign="top">Examples:</td><td>PSAT-2 C apng eFaaijtkpokoaB aaaa A aokF eEadjluappjxay<br>
+  PSAT-2 S ashd aDbiaaaa qralaitkboFxaa</medium></td></tr>
+  <tr><td valign="top">Telemetry:</td><td><input type="text" name="tlm" id="tlm" value="<?php echo $tlm; ?>" size=80><br><br></td></tr>
+  <tr><td valign="top">Comment:</td><td><input type="text" name="comment" id="comment" value="<?php echo $comment; ?>" size=50><br>
+  <small>Please provide any important info, like your callsign, email, SatNOGS reception ID etc.<br>
+  Valid telemetry frames are automatically saved with timestamp and your IP address for further analysis.</small><br><br>
+  </td></tr>
+  <tr><td></td><td><input type="submit"></td></tr>
+  </table>
 </form>
 
 <br>
@@ -34,12 +47,13 @@ function getval($inp)
     return $value;
 }
 
-function parse_tlm_psk($tlm)
+function parse_tlm_psk($tlm, $comment)
 {
     // PSAT-2 C apng eFaaijtkpokoaB aaaa A aokF eEadjluappjxay
     echo "---- Current frame ----\n\n";
 
     $tok = strtok($tlm, " ");
+    $mode = $tok;
     echo "Mode: " . $tok . "\n";
     echo "\n";
 
@@ -47,6 +61,9 @@ function parse_tlm_psk($tlm)
     $val = (getval(substr($tok, 0, 2)) << 10) + getval(substr($tok, 2, 2));
     echo "ClockTimer = " . $val . " ticks = " . floor($val*20/3600) . gmdate(":i:s", $val*20) . "\n";
     echo "\n";
+    $excel = $comment . "\t\t";
+    $excel = $excel . $val . "\t" . floor($val*20/3600) . gmdate(":i:s", $val*20) . "\t";
+    $excel = $excel . $mode . "\t";
 
     $tok = strtok(" ");
     echo "RebootCnt  = " . getval(substr($tok, 0, 2)) . " times\n";
@@ -55,8 +72,14 @@ function parse_tlm_psk($tlm)
     echo "val_Vbat   = " . getval(substr($tok, 6, 2)) . " = " . round(getval(substr($tok, 6, 2)) * 3300 * 147 / 47 / 1024 / 1000, 3) . " V\n";
     echo "val_5V     = " . getval(substr($tok, 8, 2)) . " = " . round(getval(substr($tok, 8, 2)) * 2500 * 409 / 100 / 1024 / 1000, 3) . " V\n";
     echo "val_Ic     = " . getval(substr($tok, 10, 2)) . " mA\n";
-    echo "val_T_RX   = " . getval(substr($tok, 12, 2)) . " deg C\n";
+    $temp = getval(substr($tok, 12, 2));
+    if ($temp > 512) $temp = $temp - 1024;
+    echo "val_T_RX   = " . strval($temp) . " deg C\n";
     echo "\n";
+    $excel = $excel . getval(substr($tok, 0, 2)) . "\t" . getval(substr($tok, 2, 2)) . "\t" . \
+      getval(substr($tok, 4, 2)) . "\t" . round(getval(substr($tok, 6, 2)) * 3300 * 147 / 47 / 1024 / 1000, 3) . "\t" . \
+      round(getval(substr($tok, 8, 2)) * 2500 * 409 / 100 / 1024 / 1000, 3) . "\t" . getval(substr($tok, 10, 2)) . "\t" . \
+      strval($temp) . "\n";
 
     $tok = strtok(" ");
     $val = getval(substr($tok, 0, 2));
@@ -67,26 +90,46 @@ function parse_tlm_psk($tlm)
     echo "status.PeriodsTX      = " . (($val >> 0) & 0x1F) . "\n";
 
     echo "\n\n";
-    echo "---- History frame ----\n\n";
-
     $tok = strtok(" ");
-    echo "Mode: " . $tok . "\n";
-    echo "\n";
+    if ($tok >= 'A' && $tok <= 'D') {
+        echo "---- History frame ----\n\n";
+    
+        $mode = $tok;
+        echo "Mode: " . $tok . "\n";
+        echo "\n";
+    
+        $tok = strtok(" ");
+        $val = (getval(substr($tok, 0, 2)) << 10) + getval(substr($tok, 2, 2));
+        echo "ClockTimer = " . $val . " ticks = " . floor($val*20/3600) . gmdate(":i:s", $val*20) . "\n";
+        echo "\n";
+        $excel = $excel . $comment . "\t\t";
+        $excel = $excel . $val . "\t" . floor($val*20/3600) . gmdate(":i:s", $val*20) . "\t";
+        $excel = $excel . $mode . "\t";
+    
+        $tok = strtok(" ");
+        echo "RebootCnt  = " . getval(substr($tok, 0, 2)) . " times\n";
+        echo "val_PSK    = " . getval(substr($tok, 2, 2)) . " %\n";
+        echo "val_AGC    = " . getval(substr($tok, 4, 2)) . "\n";
+        echo "val_Vbat   = " . getval(substr($tok, 6, 2)) . " = " . round(getval(substr($tok, 6, 2)) * 3300 * 147 / 47 / 1024 / 1000, 3) . " V\n";
+        echo "val_5V     = " . getval(substr($tok, 8, 2)) . " = " . round(getval(substr($tok, 8, 2)) * 2500 * 409 / 100 / 1024 / 1000, 3) . " V\n";
+        echo "val_Ic     = " . getval(substr($tok, 10, 2)) . " mA\n";
+        $temp = getval(substr($tok, 12, 2));
+        if ($temp > 512) $temp = $temp - 1024;
+        echo "val_T_RX   = " . strval($temp) . " deg C\n";
+        echo "\n";
+        $excel = $excel . getval(substr($tok, 0, 2)) . "\t" . getval(substr($tok, 2, 2)) . "\t" . \
+          getval(substr($tok, 4, 2)) . "\t" . round(getval(substr($tok, 6, 2)) * 3300 * 147 / 47 / 1024 / 1000, 3) . "\t" . \
+          round(getval(substr($tok, 8, 2)) * 2500 * 409 / 100 / 1024 / 1000, 3) . "\t" . getval(substr($tok, 10, 2)) . "\t" . \
+          strval($temp) . "\n";
+        
+        echo "\n";
+    }
+    
+    echo "---- Spreadsheet format ----\n\n";
+    echo $excel;
+    echo "\n\n";
 
-    $tok = strtok(" ");
-    $val = (getval(substr($tok, 0, 2)) << 10) + getval(substr($tok, 2, 2));
-    echo "ClockTimer = " . $val . " ticks = " . floor($val*20/3600) . gmdate(":i:s", $val*20) . "\n";
-    echo "\n";
-
-    $tok = strtok(" ");
-    echo "RebootCnt  = " . getval(substr($tok, 0, 2)) . " times\n";
-    echo "val_PSK    = " . getval(substr($tok, 2, 2)) . " %\n";
-    echo "val_AGC    = " . getval(substr($tok, 4, 2)) . "\n";
-    echo "val_Vbat   = " . getval(substr($tok, 6, 2)) . " = " . round(getval(substr($tok, 6, 2)) * 3300 * 147 / 47 / 1024 / 1000, 3) . " V\n";
-    echo "val_5V     = " . getval(substr($tok, 8, 2)) . " = " . round(getval(substr($tok, 8, 2)) * 2500 * 409 / 100 / 1024 / 1000, 3) . " V\n";
-    echo "val_Ic     = " . getval(substr($tok, 10, 2)) . " mA\n";
-    echo "val_T_RX   = " . getval(substr($tok, 12, 2)) . " deg C\n";
-    echo "\n";
+    return $excel;
 }
 
 
@@ -102,12 +145,13 @@ function legend_psk()
 }
 
 
-function parse_tlm_sstv($tlm)
+function parse_tlm_sstv($tlm, $comment)
 {
     // PSAT-2 S ashd aDbiaaaa qralaitkboFxaa
     echo "---- Current frame ----\n\n";
 
     $tok = strtok($tlm, " ");
+    $mode = $tok;
     echo "Mode: " . $tok . "\n";
     echo "\n";
 
@@ -115,14 +159,21 @@ function parse_tlm_sstv($tlm)
     $val = (getval(substr($tok, 0, 2)) << 10) + getval(substr($tok, 2, 2));
     echo "Tick = " . $val . " sec = " . floor($val/3600) . gmdate(":i:s", $val) . "\n";
     echo "\n";
+    $excel = $comment . "\t\t";
+    $excel = $excel . $val . "\t" . floor($val/3600) . gmdate(":i:s", $val) . "\t";
+    $excel = $excel . $mode . "\t";
 
     $tok = strtok(" ");
-    echo "ADC_Temperature = " . getval(substr($tok, 0, 2)) . " deg C\n";
+    $temp = getval(substr($tok, 0, 2));
+    if ($temp > 512) $temp = $temp - 1024;
+    echo "ADC_Temperature = " . strval($temp) . " deg C\n";
     $val = getval(substr($tok, 2, 2));
     echo "ADC_Light       = " . (($val%100) * pow(10, floor($val/100))) . " lux\n";
     echo "Plan_Auth       = " . getval(substr($tok, 4, 2)) . "\n";
     echo "Plan_*_Count    = " . getval(substr($tok, 6, 2)) . "\n";
     echo "\n";
+    $excel = $excel . strval($temp) . "\t" . (($val%100) * pow(10, floor($val/100))) . "\t" . \
+      getval(substr($tok, 4, 2)) . "\t" . getval(substr($tok, 6, 2)) . "\t";
 
     $tok = strtok(" ");
     echo "cnt_Boot        = " . getval(substr($tok, 0, 2)) . " times\n";
@@ -133,6 +184,17 @@ function parse_tlm_sstv($tlm)
     echo "cnt_CmdIgnored  = " . getval(substr($tok, 10, 2)) . " times\n";
     echo "cnt_AuthError   = " . getval(substr($tok, 12, 2)) . " times\n";
     echo "\n";
+    $excel = $excel . getval(substr($tok, 0, 2)) . "\t" . getval(substr($tok, 2, 2)) . "\t" . \
+      getval(substr($tok, 4, 2)) . "\t" . getval(substr($tok, 6, 2)) . "\t" . \
+      getval(substr($tok, 8, 2)) . "\t" . getval(substr($tok, 10, 2)) . "\t" . \
+      getval(substr($tok, 12, 2)) . "\n";
+
+    echo "\n";
+    echo "---- Spreadsheet format ----\n\n";
+    echo $excel;
+    echo "\n\n";
+    
+    return $excel;
 }
 
 
@@ -165,16 +227,28 @@ if ($tlm != "") {
         if ($tlm2[0] == 'A' || $tlm2[0] == 'B' || $tlm2[0] == 'C' || $tlm2[0] == 'D') {
             echo "<h3>PSK TLM</h3>\n";
             echo "<pre>\n";
-            parse_tlm_psk($tlm2);
+            $excel = parse_tlm_psk($tlm2, $comment);
             echo "</pre>";
             legend_psk();
+            $fp = fopen("tlm_psk.txt", "a");
+            fprintf($fp, "%s;%s;%s;%s\n", date('Y-m-d H:i:s'), $_SERVER['REMOTE_ADDR'], $tlm, $comment);
+            fclose($fp);
+            $fp = fopen("tbl_psk.txt", "a");
+            fwrite($fp, $excel);
+            fclose($fp);
         }
         else if ($tlm2[0] == 'S') {
             echo "<h3>SSTV TLM</h3>\n";
             echo "<pre>\n";
-            parse_tlm_sstv($tlm2);
+            $excel = parse_tlm_sstv($tlm2, $comment);
             echo "</pre>";
             legend_sstv();
+            $fp = fopen("tlm_sstv.txt", "a");
+            fprintf($fp, "%s;%s;%s;%s\n", date('Y-m-d H:i:s'), $_SERVER['REMOTE_ADDR'], $tlm, $comment);
+            fclose($fp);
+            $fp = fopen("tbl_sstv.txt", "a");
+            fwrite($fp, $excel);
+            fclose($fp);
         }
         else {
             echo "Unknown TLM type";
