@@ -6,17 +6,22 @@ This repository hosts public parts of two boards from [PSAT2](http://www.aprs.or
 
 **SSTV transmitter board** provides a Slow-scan Television (SSTV) signal generator with PSK/CW telemetry, APRS uplink, and camera module. It is based on STM32F446RET6 microcontroller. Supported SSTV modes are Robot36, Robot72, MP73 and MP115.
 
-## Important links (UPDATED!)
+## Important information (UPDATED Sep 30, 2019)
 
-* [Gallery of decoded SSTV images](http://www.urel.feec.vutbr.cz/esl/psat2/sstv/)
+* Current PSAT2 status
+  * SSTV operational, images #0-#7 from Sep 10, images #8-#15 from Jul 12 (noted in SSTV telemetry below)
+  * PSK transponder operational, mode A
+  * APRS is down
 
-* [Online telemetry decoder](http://www.urel.feec.vutbr.cz/esl/psat2/psat2tlm.php)
+* Please **send your SSTV images** to alpov@alpov.net. I am collecting the emails from reporters and occasionaly send them some news. Other info source is [AMSAT-BB](https://www.amsat.org/pipermail/amsat-bb/).
 
-* [Decoded telemetry of PSK and SSTV boards](https://docs.google.com/spreadsheets/d/1X_4X0AgCshNDFIrDecOif41eRRwNzOKZwRn9tjI5_hs/edit?usp=sharing)
+* [Gallery of decoded SSTV images](http://www.urel.feec.vutbr.cz/esl/psat2/sstv/).
 
-* [SatNOGS for PSAT2](https://network.satnogs.org/observations/?future=0&good=1&bad=0&unvetted=0&failed=0&norad=99969)
+* [Online telemetry decoder](http://www.urel.feec.vutbr.cz/esl/psat2/psat2tlm.php) - please use for PSK-31 telemetry upload.
 
-* Please **send your images** and report PSK-31 telemetry to alpov@alpov.net
+* [Decoded telemetry of PSK and SSTV boards](https://docs.google.com/spreadsheets/d/1X_4X0AgCshNDFIrDecOif41eRRwNzOKZwRn9tjI5_hs/edit?usp=sharing).
+
+* [SatNOGS for PSAT2](https://network.satnogs.org/observations/?future=0&good=1&bad=0&unvetted=0&failed=0&norad=99969).
 
 ## Transponder modes overview
 The main function of the transponder is to receive PSK signals from 29.48 MHz uplink (passband from 29.4804 to 29.4826 MHz) and transmit them as a FM signal at 435.350 MHz downlink. The downlink is mixed with telemetry streams and SSTV images.
