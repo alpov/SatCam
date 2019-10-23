@@ -1,10 +1,10 @@
-# SatCam
+# SatCam - SSTV encoder for OV2640
 
 SatCam in an SSTV encoder with OV2640 camera. It is based on STM32F446RET6 microcontroller. Supported SSTV modes are Robot36, Robot72, MP73 and MP115. SatCam was originally developed as a part of PSAT2 satellite project and later redesigned as a stand-alone module.
 
 ![SatCam prototype photo](Docs/satcam_photo.jpg)
 
-SatCam can be commanded from e.g. an APRS link, the UART works at 9600 8N1. It looks for 'SATCAMERA:' keyword, followed by a command. End of line is <CR>, <LF> or '{'. Empty lines and messages without proper keyword are ignored. All commands including the keyword are case insensitive. Example: 'SatCamera:sstv.live.73'<CR>.
+SatCam can be commanded from e.g. an APRS link, the UART works at 9600 8N1. It looks for `SATCAMERA:` keyword, followed by a command. End of line is `<CR>`, `<LF>` or `{`. Empty lines and messages without proper keyword are ignored. All commands including the keyword are case insensitive. Example: `SatCamera:sstv.live.73<CR>`.
 
 Another way of using SatCam is to setup its initial configuration with UART and then use its input signals only.
 
@@ -49,31 +49,31 @@ Another way of using SatCam is to setup its initial configuration with UART and 
 
 UART at 9600 8N1; case insensitive, delimiter is `SATCAMERA:`, end of line is `{` or `<CR>` or `<LF>`.
 
-| Command syntax                        | Example or Default value | Parameters |
-| ------------------------------------- | ------------------------ | ---------- |
-| `sstv.live.MODE.OVERLAY`              | sstv.live.36 (send picture as Robot36) | MODE is `36` for Robot36, `72` for Robot72, `73` for MP73, `115` for MP115 (default: 36)
-| `sstv.rom.MODE.PAGE_NUMBER.OVERLAY`   | sstv.rom.115.3.hello (send hardcoded image 3 as MP115, with overlay) | PAGE_NUMBER is ROM memory page (default: 0), OVERLAY is user-defined text, `.` and `{` not allowed, up to 13 chars (default: none)
-| `psk.MESSAGE.SPEED.FREQ`              | psk.hello.31.1000 (send message as PSK-31 at 1kHz) | MESSAGE is either user-defined text (`.` and `{` not allowed) or `nvinfo` or `config`
-| `psk.config.SPEED.FREQ`               | psk.config.125.1000 (send configuration as PSK-125 at 1kHz) | SPEED is `31`, `63`, `125`, `250`, `500`, `1000` (default: 31, for config/nvinfo: 125)
-| `psk.nvinfo.SPEED.FREQ`               | psk.nvinfo.125.1000 (send NVinfo log as PSK-125 at 1kHz) | FREQ is 100-7000Hz (default: 800)
-| `cw.MESSAGE.WPM.FREQ`                 | cw.hello.25.1000 (send message as 25WPM CW at 1kHz) | WPM is word per minute speed (5 to 40)
+| Command syntax                        | Example or default | Parameters |
+| ------------------------------------- | -------------------| ---------- |
+| `sstv.live.MODE.OVERLAY`              | `sstv.live.36` (send picture as Robot36) | MODE is `36` for Robot36, `72` for Robot72, `73` for MP73, `115` for MP115 (default: 36)
+| `sstv.rom.MODE.PAGE_NUMBER.OVERLAY`   | `sstv.rom.115.3.hello` (send hardcoded image 3 as MP115, with overlay) | PAGE_NUMBER is ROM memory page (default: 0), OVERLAY is user-defined text, `.` and `{` not allowed, up to 13 chars (default: none)
+| `psk.MESSAGE.SPEED.FREQ`              | `psk.hello.31.1000` (send message as PSK-31 at 1kHz) | MESSAGE is either user-defined text (`.` and `{` not allowed) or `nvinfo` or `config`
+| `psk.config.SPEED.FREQ`               | `psk.config.125.1000` (send configuration as PSK-125 at 1kHz) | SPEED is `31`, `63`, `125`, `250`, `500`, `1000` (default: 31, for config/nvinfo: 125)
+| `psk.nvinfo.SPEED.FREQ`               | `psk.nvinfo.125.1000` (send NVinfo log as PSK-125 at 1kHz) | FREQ is 100-7000Hz (default: 800)
+| `cw.MESSAGE.WPM.FREQ`                 | `cw.hello.25.1000` (send message as 25WPM CW at 1kHz) | WPM is word per minute speed (5 to 40)
 | `auth.PIN`                            |
-| `camcfg.delay.DELAY`                  | | DELAY is 100-5000ms
-| `camcfg.qs.QS`                        | | QS is 0-255
-| `camcfg.agc.ceiling.AGC_CEILING`      | | AGC_CEILING is 2, 4, 8, 16, 32, 64, 128
-| `camcfg.agc.manual.AGC_VALUE`         | | AGC_MANUAL is 0-1023
+| `camcfg.delay.DELAY`                  | 1000          | DELAY is 100-5000ms
+| `camcfg.qs.QS`                        | 5             | QS is 0-255
+| `camcfg.agc.ceiling.AGC_CEILING`      | 16            | AGC_CEILING is 2, 4, 8, 16, 32, 64, 128
+| `camcfg.agc.manual.AGC_VALUE`         | 0             | AGC_MANUAL is 0-1023
 | `camcfg.aec.auto`                     |
-| `camcfg.aec.manual.AEC_VALUE`         | | AEC is 0-65535 or `auto`
-| `camcfg.awb.AWB_TYPE`                 | | AWB is `auto`, `sunny`, `cloudy`, `office`, `home`
-| `camcfg.rotate.ROTATE`                | | ROTATE is `0` (off) or `1` (on)
-| `camcfg.start.0.COMMAND`              |
-| `camcfg.start.1.COMMAND`              |
-| `camcfg.start.2.COMMAND`              |
-| `camcfg.start.3.COMMAND`              |
-| `camcfg.startedge.EDGE_VALUE`         | | EDGE_VALUE is `rising`, `falling` or `any`
-| `camcfg.callsign.CALLSIGN`            |
-| `camcfg.autoreboot.REBOOT_TIME`       | | REBOOT_TIME is 0 or >=120sec
-| `camcfg.userpin.PIN`                  |
+| `camcfg.aec.manual.AEC_VALUE`         | `auto`        | AEC is 0-65535 or `auto`
+| `camcfg.awb.AWB_TYPE`                 | `sunny`       | AWB is `auto`, `sunny`, `cloudy`, `office`, `home`
+| `camcfg.rotate.ROTATE`                | 0             | ROTATE is `0` (off) or `1` (on)
+| `camcfg.start.0.COMMAND`              | `SSTV.LIVE.36`
+| `camcfg.start.1.COMMAND`              | `SSTV.LIVE.73`
+| `camcfg.start.2.COMMAND`              | `PSK.NVINFO.125.1000`
+| `camcfg.start.3.COMMAND`              | `SSTV.ROM.115.0`
+| `camcfg.startedge.EDGE_VALUE`         | `any`         | EDGE_VALUE is `rising`, `falling` or `any`
+| `camcfg.callsign.CALLSIGN`            | `SatCam`
+| `camcfg.autoreboot.REBOOT_TIME`       | 0             | REBOOT_TIME is 0 or >=120sec
+| `camcfg.userpin.PIN`                  | 0
 | `camcfg.load`                         |
 | `camcfg.save`                         |
 | `camcfg.default`                      |
@@ -85,6 +85,4 @@ UART at 9600 8N1; case insensitive, delimiter is `SATCAMERA:`, end of line is `{
 | `debug.eeprom.dump`                   |
 | `debug.adc.voltage`                   |
 | `debug.adc.temp`                      |
-
-
 
