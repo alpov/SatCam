@@ -323,8 +323,15 @@ static CMD_RESULT cmd_camcfg(char **saveptr)
     }
     else if (streq(token, "rotate")) {
         if ((token = strtok_r(NULL, CMD_SEPARATOR, saveptr)) == NULL) return R_ERR_SYNTAX;
-        config.cam.rotate = (atol(token) != 0);
-        return R_OK;
+        if (streq(token, "off")) {
+            config.cam.rotate = 0;
+            return R_OK;
+        }
+        else if (streq(token, "on")) {
+            config.cam.rotate = 1;
+            return R_OK;
+        }
+        else return R_ERR_SYNTAX;
     }
     else if (streq(token, "start")) {
         if ((token = strtok_r(NULL, CMD_SEPARATOR, saveptr)) == NULL) return R_ERR_SYNTAX;
@@ -365,6 +372,14 @@ static CMD_RESULT cmd_camcfg(char **saveptr)
         config.user_pin = atol(token);
         auth_check_token(config.user_pin); // authorize with new pin
         return R_OK;
+    }
+    else if (streq(token, "clearlog")) {
+        eeprom_erase_full(false);
+        return R_OK;
+    }
+    else if (streq(token, "reboot")) {
+        NVIC_SystemReset(); // trigger NVIC system reset
+        return R_OK_SILENT; // to suppress warning
     }
     else if (streq(token, "load")) {
         config_load_eeprom();
@@ -430,10 +445,6 @@ static CMD_RESULT cmd_debug(char **saveptr)
     }
     else if (streq(token, "eeprom")) {
         if ((token = strtok_r(NULL, CMD_SEPARATOR, saveptr)) == NULL) return R_ERR_SYNTAX;
-        if (streq(token, "clearlog")) {
-            eeprom_erase_full(false);
-            return R_OK;
-        }
         if (streq(token, "fullerase")) {
             eeprom_erase_full(true);
             return R_OK;

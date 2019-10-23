@@ -49,40 +49,47 @@ Another way of using SatCam is to setup its initial configuration with UART and 
 
 UART at 9600 8N1; case insensitive, delimiter is `SATCAMERA:`, end of line is `{` or `<CR>` or `<LF>`.
 
-| Command syntax                        | Example or default | Parameters |
-| ------------------------------------- | -------------------| ---------- |
+| Command syntax                        | Example       | Parameters |
+| ------------------------------------- | ------------- | ---------- |
 | `sstv.live.MODE.OVERLAY`              | `sstv.live.36` (send picture as Robot36) | MODE is `36` for Robot36, `72` for Robot72, `73` for MP73, `115` for MP115 (default: 36)
 | `sstv.rom.MODE.PAGE_NUMBER.OVERLAY`   | `sstv.rom.115.3.hello` (send hardcoded image 3 as MP115, with overlay) | PAGE_NUMBER is ROM memory page (default: 0), OVERLAY is user-defined text, `.` and `{` not allowed, up to 13 chars (default: none)
 | `psk.MESSAGE.SPEED.FREQ`              | `psk.hello.31.1000` (send message as PSK-31 at 1kHz) | MESSAGE is either user-defined text (`.` and `{` not allowed) or `nvinfo` or `config`
 | `psk.config.SPEED.FREQ`               | `psk.config.125.1000` (send configuration as PSK-125 at 1kHz) | SPEED is `31`, `63`, `125`, `250`, `500`, `1000` (default: 31, for config/nvinfo: 125)
 | `psk.nvinfo.SPEED.FREQ`               | `psk.nvinfo.125.1000` (send NVinfo log as PSK-125 at 1kHz) | FREQ is 100-7000Hz (default: 800)
 | `cw.MESSAGE.WPM.FREQ`                 | `cw.hello.25.1000` (send message as 25WPM CW at 1kHz) | WPM is word per minute speed (5 to 40)
-| `auth.PIN`                            |
-| `camcfg.delay.DELAY`                  | 1000          | DELAY is 100-5000ms
-| `camcfg.qs.QS`                        | 5             | QS is 0-255
-| `camcfg.agc.ceiling.AGC_CEILING`      | 16            | AGC_CEILING is 2, 4, 8, 16, 32, 64, 128
-| `camcfg.agc.manual.AGC_VALUE`         | 0             | AGC_MANUAL is 0-1023
-| `camcfg.aec.auto`                     |
-| `camcfg.aec.manual.AEC_VALUE`         | `auto`        | AEC is 0-65535 or `auto`
-| `camcfg.awb.AWB_TYPE`                 | `sunny`       | AWB is `auto`, `sunny`, `cloudy`, `office`, `home`
-| `camcfg.rotate.ROTATE`                | 0             | ROTATE is `0` (off) or `1` (on)
-| `camcfg.start.0.COMMAND`              | `SSTV.LIVE.36`
-| `camcfg.start.1.COMMAND`              | `SSTV.LIVE.73`
-| `camcfg.start.2.COMMAND`              | `PSK.NVINFO.125.1000`
-| `camcfg.start.3.COMMAND`              | `SSTV.ROM.115.0`
-| `camcfg.startedge.EDGE_VALUE`         | `any`         | EDGE_VALUE is `rising`, `falling` or `any`
-| `camcfg.callsign.CALLSIGN`            | `SatCam`
-| `camcfg.autoreboot.REBOOT_TIME`       | 0             | REBOOT_TIME is 0 or >=120sec
-| `camcfg.userpin.PIN`                  | 0
-| `camcfg.load`                         |
-| `camcfg.save`                         |
-| `camcfg.default`                      |
-| `debug.status`                        |
-| `debug.reset.RESET_TYPE`              | | RESET_TYPE is `nvic`, `watchdog`, `fault`
-| `debug.sendjpeg`                      |
-| `debug.eeprom.clearlog`               |
-| `debug.eeprom.fullerase`              |
-| `debug.eeprom.dump`                   |
-| `debug.adc.voltage`                   |
-| `debug.adc.temp`                      |
+| `auth.PIN`                            | `auth.1234` (authorize with PIN 1234) | PIN is user or master access code
+
+| Command syntax                        | Default       | Parameters |
+| ------------------------------------- | ------------- | ---------- |
+| `camcfg.delay.DELAY`                  | 1000          | Camera module initial delay. DELAY is 100-5000ms.
+| `camcfg.qs.QS`                        | 5             | JPEG quality factor. QS is 0-255.
+| `camcfg.agc.ceiling.AGC_CEILING`      | 16            | Automatic gain control. AGC_CEILING is 2, 4, 8, 16, 32, 64, 128.
+| `camcfg.agc.manual.AGC_VALUE`         | 0             | Manual gain control. AGC_MANUAL is 0-1023.
+| `camcfg.aec.auto`                     |               | Automatic exposure control.
+| `camcfg.aec.manual.AEC_VALUE`         | `auto`        | Manual exposure time. AEC is 0-65535 or `auto`.
+| `camcfg.awb.AWB_TYPE`                 | `sunny`       | Automatic white balabce. AWB is `auto`, `sunny`, `cloudy`, `office`, `home`.
+| `camcfg.rotate.ROTATE`                | off           | Camera rotation (upside down). ROTATE is `off` or `on`.
+| `camcfg.start.0.COMMAND`              | `SSTV.LIVE.36`        | Command for M0=0, M1=0.
+| `camcfg.start.1.COMMAND`              | `SSTV.LIVE.73`        | Command for M0=1, M1=0.
+| `camcfg.start.2.COMMAND`              | `PSK.NVINFO.125.1000` | Command for M0=0, M1=1.
+| `camcfg.start.3.COMMAND`              | `SSTV.ROM.115.0`      | Command for M0=1, M1=1.
+| `camcfg.startedge.EDGE_VALUE`         | `any`         | Active edge for ST trigger input. EDGE_VALUE is `rising`, `falling` or `any`.
+| `camcfg.callsign.CALLSIGN`            | `SatCam`      | Module callsign, for SSTV overlay and PSK/CW messages.
+| `camcfg.autoreboot.REBOOT_TIME`       | 0             | Periodic reboot. REBOOT_TIME is 0 or >=120sec. Careful when uptime>autoreboot, camera will reboot immediately without savit the value.
+| `camcfg.userpin.PIN`                  | 0             | Set user PIN for `camcfg` and `debug` commands.
+| `camcfg.clearlog`                     |               | Clear EEPROM logs.
+| `camcfg.reboot`                       |               | Safe MCU reboot (with NVIC).
+| `camcfg.load`                         |               | Load configuration from EEPROM (always after power-up).
+| `camcfg.save`                         |               | Save current configuration to EEPROM.
+| `camcfg.default`                      |               | Load default SatCam configuration.
+
+| Command syntax                        | Description |
+| ------------------------------------- | ----------- |
+| `debug.status`                        | Write status (configuration and NVinfo) to terminal.
+| `debug.reset.RESET_TYPE`              | Debug MCU reset. RESET_TYPE is `nvic`, `watchdog`, `fault`.
+| `debug.sendjpeg`                      | Send JPEG from camera to terminal.
+| `debug.eeprom.fullerase`              | Perform full EEPROM erase (configuration and logs).
+| `debug.eeprom.dump`                   | Dump configuration EEPROM page to terminal.
+| `debug.adc.voltage`                   | Measure VDD voltage and write to terminal.
+| `debug.adc.temp`                      | Measure core temperature and write to terminal.
 
