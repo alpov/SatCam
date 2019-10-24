@@ -21,15 +21,17 @@ Another way of using SatCam is to setup its initial configuration with UART and 
 | `EN`  | voltage regulator enable input
 | `VDD` | power supply
 
+Connection of `RXD` and `TXD` is confusing, should be interchanged (TBD next PCB revision).
+
 ## Voltage levels
 | Pin   | Levels      |
 | ----- | ----------- |
 | `ST`, `M0`, `M1`  | 5V (can be changed with R7, R8, R9)
-| `TXD`, `RXD`      | 3V3 (RXD can be changed with R3, TXD needs level converter)
+| `TXD`, `RXD`      | 3V3 (input can be changed with R4, output needs level converter)
 | `EN`              | >2.3V enabled, <0.5V or open disabled
 | `PTT`             | open-drain, max. 25V
-| `AUD`             | default 90% volume is ????Vpp to high impedance (>5kohm) load
-| `VDD`             | ???-16V
+| `AUD`             | default SSTV audio is 1.5Vpp to high impedance (>5kohm) load
+| `VDD`             | 3.2-16V (3.1-6V if R31=0ohm, IC6 not placed)
 
 ## Current consumption
 | Mode                                              | Avg. current |
@@ -75,7 +77,7 @@ UART at 9600 8N1; case insensitive, delimiter is `SATCAMERA:`, end of line is `{
 | `camcfg.start.3.COMMAND`              | `SSTV.ROM.115.0`      | Command for M0=1, M1=1.
 | `camcfg.startedge.EDGE_VALUE`         | `any`         | Active edge for ST trigger input. EDGE_VALUE is `rising`, `falling` or `any`.
 | `camcfg.callsign.CALLSIGN`            | `SatCam`      | Module callsign, for SSTV overlay and PSK/CW messages.
-| `camcfg.autoreboot.REBOOT_TIME`       | 0             | Periodic reboot. REBOOT_TIME is 0 or >=120sec. Careful when uptime>autoreboot, camera will reboot immediately without savit the value.
+| `camcfg.autoreboot.REBOOT_TIME`       | 0             | Periodic reboot. REBOOT_TIME is 0 or >=120sec. Careful when uptime>autoreboot, camera will reboot immediately without saving the value.
 | `camcfg.userpin.PIN`                  | 0             | Set user PIN for `camcfg` and `debug` commands.
 | `camcfg.clearlog`                     |               | Clear EEPROM logs.
 | `camcfg.reboot`                       |               | Safe MCU reboot (with NVIC).
