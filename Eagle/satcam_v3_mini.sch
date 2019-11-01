@@ -7918,8 +7918,8 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="P+6" library="supply1" deviceset="VCC" device=""/>
 <part name="C14" library="rcl" deviceset="C-EU" device="C0603" value="4u7"/>
 <part name="GND24" library="supply1" deviceset="GND" device=""/>
-<part name="C6" library="rcl" deviceset="C-EU" device="C0603" value="15p"/>
-<part name="C5" library="rcl" deviceset="C-EU" device="C0603" value="15p"/>
+<part name="C6" library="rcl" deviceset="C-EU" device="C0603" value="12p"/>
+<part name="C5" library="rcl" deviceset="C-EU" device="C0603" value="12p"/>
 <part name="IC2" library="satcam" deviceset="MCP6001U" device=""/>
 <part name="C10" library="rcl" deviceset="C-EU" device="C0603" value="100n"/>
 <part name="GND20" library="supply1" deviceset="GND" device=""/>
@@ -7933,7 +7933,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="GND11" library="supply1" deviceset="GND" device=""/>
 <part name="R10" library="rcl" deviceset="R-EU_" device="R0603" value="100k"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
-<part name="R3" library="rcl" deviceset="R-EU_" device="R0603" value="2k2"/>
+<part name="R3" library="rcl" deviceset="R-EU_" device="R0603" value="680"/>
 <part name="R4" library="rcl" deviceset="R-EU_" device="R0603" value="2k2"/>
 <part name="R6" library="rcl" deviceset="R-EU_" device="R0603" value="47"/>
 <part name="JP2" library="pinhead" deviceset="PINHD-1X6" device="" value="DEBUG"/>
@@ -9273,7 +9273,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <wire x1="17.78" y1="33.02" x2="20.32" y2="30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="SSTV_RX" class="0">
+<net name="SSTV_TX" class="0">
 <segment>
 <wire x1="40.64" y1="124.46" x2="20.32" y2="124.46" width="0.1524" layer="91"/>
 <label x="22.86" y="124.46" size="1.778" layer="95"/>
@@ -9287,7 +9287,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <wire x1="20.32" y1="38.1" x2="48.26" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="SSTV_TX" class="0">
+<net name="SSTV_RX" class="0">
 <segment>
 <wire x1="40.64" y1="121.92" x2="20.32" y2="121.92" width="0.1524" layer="91"/>
 <label x="22.86" y="121.92" size="1.778" layer="95"/>

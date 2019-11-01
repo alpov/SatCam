@@ -4,7 +4,9 @@ SatCam in an SSTV encoder with OV2640 camera. It is based on STM32F446RET6 micro
 
 ![SatCam prototype photo](Docs/satcam_photo.jpg)
 
-SatCam can be commanded from e.g. an APRS link, the UART works at 9600 8N1. It looks for `SATCAMERA:` keyword, followed by a command. End of line is `<CR>`, `<LF>` or `{`. Empty lines and messages without proper keyword are ignored. All commands including the keyword are case insensitive. Example: `SatCamera:sstv.live.73<CR>`.
+[SatCam schematic](Eagle/satcam_v3_mini_sch.pdf) - [SatCam PCB](Eagle/satcam_v3_mini_tvalues.pdf)
+
+SatCam can be commanded from e.g. an APRS link, the UART works at 9600 8N1. It looks for `SATCAMERA:` keyword, followed by a command, case insensitive. End of line is `<CR>`, `<LF>` or `{`. Empty lines and messages without proper keyword are ignored. All commands including the keyword are case insensitive. Example: `SatCamera:sstv.live.73<CR>`.
 
 Another way of using SatCam is to setup its initial configuration with UART and then use its input signals only.
 
@@ -16,18 +18,18 @@ Another way of using SatCam is to setup its initial configuration with UART and 
 | `PTT` | open-drain PTT output, active low during TX
 | `AUD` | audio output
 | `ST`  | start trigger input
-| `TXD` | UART input (connected to MCU RXD)
-| `RXD` | UART output (connected to MCU TXD)
+| `RXD` | UART input
+| `TXD` | UART output
 | `EN`  | voltage regulator enable input
 | `VDD` | power supply
 
-Connection of `RXD` and `TXD` is confusing, should be interchanged (TBD next PCB revision).
+Silkscreen of `RXD` and `TXD` is mixed up on the 1st PCB revision. Current schematic and PCB use the ordinary meaning (RXD is the input to SatCam, TXD it the output).
 
 ## Voltage levels
 | Pin   | Levels      |
 | ----- | ----------- |
 | `ST`, `M0`, `M1`  | 5V (can be changed with R7, R8, R9)
-| `TXD`, `RXD`      | 3V3 (input can be changed with R4, output needs level converter)
+| `TXD`, `RXD`      | 3V3 (RXD can be changed with R4, TXD needs level converter)
 | `EN`              | >2.3V enabled, <0.5V or open disabled
 | `PTT`             | open-drain, max. 25V
 | `AUD`             | default SSTV audio is 1.5Vpp to high impedance (>5kohm) load
@@ -49,7 +51,7 @@ Connection of `RXD` and `TXD` is confusing, should be interchanged (TBD next PCB
 
 ## SatCam commands
 
-UART at 9600 8N1; case insensitive, delimiter is `SATCAMERA:`, end of line is `{` or `<CR>` or `<LF>`.
+The module monitors RXD line when idle and looks for `SATCAMERA:` identifier. Expected commands are for SSTV, PSK and CW systems. Other commands (CAMCFG and DEBUG) are protected by a PIN. User PIN can be set to a custom number, master PIN is fixed for the particular module (computed from the MCU unique ID). It is possible to send protected commands for the next 15 minutes after the AUTH command with a correct PIN. Master PIN can be read using `psk.nvinfo` and `debug.status` commands in case when the user PIN is not set (i.e. is zero).
 
 | Command syntax                        | Example       | Parameters |
 | ------------------------------------- | ------------- | ---------- |
@@ -61,8 +63,8 @@ UART at 9600 8N1; case insensitive, delimiter is `SATCAMERA:`, end of line is `{
 | `cw.MESSAGE.WPM.FREQ`                 | `cw.hello.25.1000` (send message as 25WPM CW at 1kHz) | WPM is word per minute speed (5 to 40)
 | `auth.PIN`                            | `auth.1234` (authorize with PIN 1234) | PIN is user or master access code
 
-| Command syntax                        | Default       | Parameters |
-| ------------------------------------- | ------------- | ---------- |
+| Command syntax                        | Default       | Description |
+| ------------------------------------- | ------------- | ----------- |
 | `camcfg.delay.DELAY`                  | 1000          | Camera module initial delay. DELAY is 100-5000ms.
 | `camcfg.qs.QS`                        | 5             | JPEG quality factor. QS is 0-255.
 | `camcfg.agc.ceiling.AGC_CEILING`      | 16            | Automatic gain control. AGC_CEILING is 2, 4, 8, 16, 32, 64, 128.
