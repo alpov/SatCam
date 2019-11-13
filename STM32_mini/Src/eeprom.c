@@ -383,8 +383,8 @@ void syslog_read_config(char *str)
     );
     if (str > end) return;
 
-    str += snprintf(str, end-str, "camera temp %d'C, voltage %umV, autoreboot %lu\r",
-        adc_read_temperature(), adc_read_voltage(), config.autoreboot
+    str += snprintf(str, end-str, "camera temp %d'C, voltage %umV, holdoff %u, autoreboot %lu\r",
+        adc_read_temperature(), adc_read_voltage(), config.holdoff, config.autoreboot
     );
     if (str > end) return;
 

@@ -77,7 +77,8 @@ The module monitors RXD line when idle and looks for `SATCAMERA:` identifier. Ex
 | `camcfg.start.1.COMMAND`              | `SSTV.LIVE.73`        | Command for M0=1, M1=0.
 | `camcfg.start.2.COMMAND`              | `PSK.NVINFO.125.1000` | Command for M0=0, M1=1.
 | `camcfg.start.3.COMMAND`              | `SSTV.ROM.115.0`      | Command for M0=1, M1=1.
-| `camcfg.startedge.EDGE_VALUE`         | `any`         | Active edge for ST trigger input. EDGE_VALUE is `rising`, `falling` or `any`.
+| `camcfg.startedge.EDGE_VALUE`         | `any`         | Active edge for ST trigger input. EDGE_VALUE is `none`, `rising`, `falling` or `any`.
+| `camcfg.holdoff.HOLDOFF_TIME`         | 2             | Hold-off time after command before next edge detection start. HOLDOFF_TIME is 0-65535sec.
 | `camcfg.callsign.CALLSIGN`            | `SatCam`      | Module callsign, for SSTV overlay and PSK/CW messages.
 | `camcfg.autoreboot.REBOOT_TIME`       | 0             | Periodic reboot. REBOOT_TIME is 0 or >=120sec. Careful when uptime>autoreboot, camera will reboot immediately without saving the value.
 | `camcfg.userpin.PIN`                  | 0             | Set user PIN for `camcfg` and `debug` commands.

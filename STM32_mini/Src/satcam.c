@@ -50,6 +50,7 @@ const CONFIG_SYSTEM config_default = {
         "SSTV.ROM.115.0",
     },
     .start_edge = EDGE_BOTH,
+    .holdoff = 2,
     .autoreboot = 0,
     .user_pin = 0,
 };
@@ -342,7 +343,11 @@ static CMD_RESULT cmd_camcfg(char **saveptr)
     }
     else if (streq(token, "startedge")) {
         if ((token = strtok_r(NULL, CMD_SEPARATOR, saveptr)) == NULL) return R_ERR_SYNTAX;
-        if (streq(token, "rising")) {
+        if (streq(token, "none")) {
+            config.start_edge = EDGE_NONE;
+            return R_OK;
+        }
+        else if (streq(token, "rising")) {
             config.start_edge = EDGE_RISING;
             return R_OK;
         }
@@ -355,6 +360,11 @@ static CMD_RESULT cmd_camcfg(char **saveptr)
             return R_OK;
         }
         else return R_ERR_SYNTAX;
+    }
+    else if (streq(token, "holdoff")) {
+        if ((token = strtok_r(NULL, CMD_SEPARATOR, saveptr)) == NULL) return R_ERR_SYNTAX;
+        config.holdoff = atol(token);
+        return R_OK;
     }
     else if (streq(token, "callsign")) {
         if ((token = strtok_r(NULL, CMD_SEPARATOR, saveptr)) == NULL) return R_ERR_SYNTAX;
@@ -521,8 +531,11 @@ void start_in_task(void)
 {
     bool start_new = HAL_GPIO_ReadPin(GPIO_START_GPIO_Port, GPIO_START_Pin) == GPIO_PIN_SET;
     static bool start_old;
+    static uint32_t start_tick;
     uint8_t mode = 0;
     bool start = false;
+
+    if (HAL_GetTick() <= start_tick) return;
 
     mode |= (HAL_GPIO_ReadPin(GPIO_M0_GPIO_Port, GPIO_M0_Pin) == GPIO_PIN_SET) ? 1 : 0;
     mode |= (HAL_GPIO_ReadPin(GPIO_M1_GPIO_Port, GPIO_M1_Pin) == GPIO_PIN_SET) ? 2 : 0;
@@ -530,7 +543,10 @@ void start_in_task(void)
     if ((config.start_edge & EDGE_RISING) && (start_new && !start_old)) start = true;
     if ((config.start_edge & EDGE_FALLING) && (!start_new && start_old)) start = true;
 
-    if (start) cmd_handler_const(config.mode_cmd[mode]);
+    if (start) {
+        cmd_handler_const(config.mode_cmd[mode]);
+        start_tick = HAL_GetTick() + config.holdoff*1000;
+    }
 
     start_old = HAL_GPIO_ReadPin(GPIO_START_GPIO_Port, GPIO_START_Pin) == GPIO_PIN_SET;
 }

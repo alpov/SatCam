@@ -43,6 +43,7 @@ typedef enum {
 #define I2C_READ    1
 #define I2C_WRITE   0
 
+#define EDGE_NONE       0
 #define EDGE_RISING     1
 #define EDGE_FALLING    2
 #define EDGE_BOTH       3
@@ -87,6 +88,7 @@ typedef struct {
     char callsign[CALLSIGN_LENGTH];
     char mode_cmd[4][STARTUP_CMD_LENGTH];
     uint8_t start_edge;
+    uint16_t holdoff;
     uint32_t autoreboot;
     uint32_t user_pin;
     uint32_t crc; // must be the last item in struct
