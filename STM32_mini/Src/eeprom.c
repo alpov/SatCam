@@ -274,10 +274,11 @@ next_page:
 
 bool eeprom_erase_full(bool erase_config)
 {
-    uint16_t addr = erase_config ? ADDR_CONFIG : ADDR_HARDFAULT;
+    uint16_t addr = erase_config ? ADDR_CONFIG : ADDR_EVENTS;
     uint8_t buffer[128]; // min. 2 pages to reset watchdog
 
     memset(buffer, 0xFF, sizeof(buffer));
+    if (!erase_config) eeprom_write(ADDR_HARDFAULT, buffer, 0x0020);
     while (addr < 0x2000) {
         if (!eeprom_write(addr, buffer, sizeof(buffer))) return false;
         addr += sizeof(buffer);
