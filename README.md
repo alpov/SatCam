@@ -6,12 +6,12 @@ This repository hosts public parts of two boards from [PSAT2](http://www.aprs.or
 
 **SSTV transmitter board** provides a Slow-scan Television (SSTV) signal generator with PSK/CW telemetry, APRS uplink, and camera module. It is based on STM32F446RET6 microcontroller. Supported SSTV modes are Robot36, Robot72, MP73 and MP115.
 
-## Important information (UPDATED Sep 30, 2019)
+## Important information (UPDATED Dec 17, 2019)
 
 * Current PSAT2 status
-  * SSTV operational, images #0-#7 from Sep 10, images #8-#15 from Jul 12 (noted in SSTV telemetry below)
-  * PSK transponder operational, mode A
-  * APRS is down
+  * SSTV 70cm operational, images #0-#7 from Oct 23, images #8-#15 from Oct 17 (noted in SSTV telemetry below)
+  * PSK 10m=>70cm transponder operational, mode A, open for users
+  * APRS 2m is down (transmitter failure) => user SSTV commanding is not possible
 
 * Please **send your SSTV images** to alpov@alpov.net. I am collecting the emails from reporters and occasionaly send them some news. Other info source is [AMSAT-BB](https://www.amsat.org/pipermail/amsat-bb/).
 
@@ -21,7 +21,9 @@ This repository hosts public parts of two boards from [PSAT2](http://www.aprs.or
 
 * [Decoded telemetry of PSK and SSTV boards](https://docs.google.com/spreadsheets/d/1X_4X0AgCshNDFIrDecOif41eRRwNzOKZwRn9tjI5_hs/edit?usp=sharing).
 
-* [SatNOGS for PSAT2](https://network.satnogs.org/observations/?future=0&good=1&bad=0&unvetted=0&failed=0&norad=99969).
+* [SatNOGS for PSAT2](https://network.satnogs.org/observations/?future=0&good=1&bad=0&unvetted=0&failed=0&norad=44354).
+
+* New [standalone camera design](SatCam.md) (for PSAT3 :-))
 
 ## Transponder modes overview
 The main function of the transponder is to receive PSK signals from 29.48 MHz uplink (passband from 29.4804 to 29.4826 MHz) and transmit them as a FM signal at 435.350 MHz downlink. The downlink is mixed with telemetry streams and SSTV images.
