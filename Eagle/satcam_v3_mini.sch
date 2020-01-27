@@ -8020,6 +8020,8 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="C26" library="rcl" deviceset="C-EU" device="C0805K" value="10u/16V"/>
 <part name="GND39" library="supply1" deviceset="GND" device=""/>
 <part name="VDD1" library="supply1" deviceset="VDD" device=""/>
+<part name="R33" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
+<part name="GND38" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -8149,7 +8151,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <instance part="GND5" gate="1" x="58.42" y="73.66"/>
 <instance part="JP1" gate="A" x="50.8" y="33.02"/>
 <instance part="Q1" gate="G$1" x="88.9" y="81.28" rot="MR0"/>
-<instance part="GND13" gate="1" x="88.9" y="73.66"/>
+<instance part="GND13" gate="1" x="88.9" y="63.5"/>
 <instance part="R26" gate="G$1" x="121.92" y="38.1"/>
 <instance part="R25" gate="G$1" x="111.76" y="27.94" rot="R90"/>
 <instance part="GND14" gate="1" x="111.76" y="17.78"/>
@@ -8165,6 +8167,8 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <instance part="C26" gate="G$1" x="144.78" y="27.94"/>
 <instance part="GND39" gate="1" x="144.78" y="17.78"/>
 <instance part="VDD1" gate="G$1" x="40.64" y="66.04" rot="MR0"/>
+<instance part="R33" gate="G$1" x="101.6" y="71.12" rot="R90"/>
+<instance part="GND38" gate="1" x="101.6" y="63.5"/>
 </instances>
 <busses>
 <bus name="D[0..7],PCLK,XCLK,HREF,VSYNC">
@@ -8570,6 +8574,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <segment>
 <pinref part="Q1" gate="G$1" pin="S"/>
 <pinref part="GND13" gate="1" pin="GND"/>
+<wire x1="88.9" y1="66.04" x2="88.9" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="R25" gate="G$1" pin="1"/>
@@ -8590,6 +8595,10 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <pinref part="GND39" gate="1" pin="GND"/>
 <pinref part="C26" gate="G$1" pin="2"/>
 <wire x1="144.78" y1="20.32" x2="144.78" y2="22.86" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R33" gate="G$1" pin="1"/>
+<pinref part="GND38" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -8904,7 +8913,11 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <wire x1="127" y1="78.74" x2="129.54" y2="76.2" width="0.1524" layer="91"/>
 <label x="111.76" y="78.74" size="1.778" layer="95"/>
 <pinref part="Q1" gate="G$1" pin="G"/>
-<wire x1="93.98" y1="78.74" x2="127" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="78.74" x2="101.6" y2="78.74" width="0.1524" layer="91"/>
+<pinref part="R33" gate="G$1" pin="2"/>
+<wire x1="101.6" y1="78.74" x2="127" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="76.2" x2="101.6" y2="78.74" width="0.1524" layer="91"/>
+<junction x="101.6" y="78.74"/>
 </segment>
 <segment>
 <wire x1="152.4" y1="121.92" x2="177.8" y2="121.92" width="0.1524" layer="91"/>

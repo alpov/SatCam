@@ -227,7 +227,7 @@ if ($tlm != "") {
         if ($tlm2[0] == 'A' || $tlm2[0] == 'B' || $tlm2[0] == 'C' || $tlm2[0] == 'D') {
             echo "<h3>PSK TLM</h3>\n";
             echo "<pre>\n";
-            $excel = parse_tlm_psk($tlm2, $comment);
+            $excel = parse_tlm_psk($tlm2, $comment.' '.date('Y-m-d'));
             echo "</pre>";
             legend_psk();
             $fp = fopen("tlm_psk.txt", "a");
@@ -240,7 +240,7 @@ if ($tlm != "") {
         else if ($tlm2[0] == 'S') {
             echo "<h3>SSTV TLM</h3>\n";
             echo "<pre>\n";
-            $excel = parse_tlm_sstv($tlm2, $comment);
+            $excel = parse_tlm_sstv($tlm2, $comment.' '.date('Y-m-d'));
             echo "</pre>";
             legend_sstv();
             $fp = fopen("tlm_sstv.txt", "a");

@@ -2,6 +2,8 @@
 
 <h2>PSAT-2 TLM stream decoder</h2>
 
+<a href="psat2sep.php">Insert separator</a><p>
+
 <?php
 
 function check_ascii($s, $len)
