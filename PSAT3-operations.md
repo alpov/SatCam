@@ -1,28 +1,33 @@
-# SatCam - SSTV camera on PSAT3
+# SSTV camera on PSAT3
 
 SatCam is an [SSTV encoder with OV2640 camera](SatCam.md). It is based on STM32F446RET6 microcontroller. Supported SSTV modes are Robot36, Robot72, MP73 and MP115. SatCam was originally developed as a part of PSAT2 satellite project and later redesigned as a stand-alone module.
 
-SatCam can be commanded from e.g. an APRS link, the UART works at 9600 8N1. It looks for `SATCAMERA:` keyword, followed by a command, case insensitive. End of line is `<CR>`, `<LF>` or `{`. Empty lines and messages without proper keyword are ignored. All commands including the keyword are case insensitive. Example: `SatCamera:sstv.live.73<CR>`.
+When enabled, camera **sends a live picture** in Robot36 or MP73 **every 10 minutes**. The SSTV transmission always come after APRS.
 
-Another way of using SatCam is to setup its initial configuration with UART and then use its input signals only.
+## Current status
 
-## Overview
-* EN low or tristated - camera is completely off, PTT tristated, RXD not monitored
-* EN goes high, ST is high - camera starts 36sec SSTV (M0 low) or 73sec SSTV (M1 high)
-* after SSTV, camera ignores anything on ST for next 10 minutes
-* after 10 minutes, camera starts to monitor ST again and waits for rising edge, which starts new SSTV
-* RXD monitor - commands addressed to SATCAMERA are executed immediately
+* Current PSAT3 status: **waiting for deploy**
 
-## SatCam commands
+* Gallery of SSTV images - TBD. SatNOGS for PSAT3 - TBD. Please send your SSTV images and received runtime status (NVinfo) to alpov@alpov.net.
 
-The module monitors RXD line when idle and looks for `SATCAMERA:` identifier. Expected commands are for SSTV, PSK and CW systems. Other commands (CAMCFG and DEBUG) are protected by a PIN. User PIN can be set to a custom number, master PIN is fixed for the particular module (computed from the MCU unique ID). It is possible to send protected commands for the next 15 minutes after the AUTH command with a correct PIN. Master PIN can be read using `psk.nvinfo` and `debug.status` commands in case when the user PIN is not set (i.e. is zero).
+## SatCam commanding
 
-| Command syntax                        | Example       | Parameters |
-| ------------------------------------- | ------------- | ---------- |
-| `sstv.live.MODE.OVERLAY`              | `sstv.live.36` (send picture as Robot36) | MODE is `36` for Robot36, `72` for Robot72, `73` for MP73, `115` for MP115 (default: 36)
-| `sstv.rom.MODE.PAGE_NUMBER.OVERLAY`   | `sstv.rom.115.3.hello` (send hardcoded image 3 as MP115, with overlay) | PAGE_NUMBER is ROM memory page (default: 0), OVERLAY is user-defined text, `.` and `{` not allowed, up to 13 chars (default: none)
-| `psk.MESSAGE.SPEED.FREQ`              | `psk.hello.31.1000` (send message as PSK-31 at 1kHz) | MESSAGE is either user-defined text (`.` and `{` not allowed) or `nvinfo` or `config`
-| `psk.config.SPEED.FREQ`               | `psk.config.125.1000` (send configuration as PSK-125 at 1kHz) | SPEED is `31`, `63`, `125`, `250`, `500`, `1000` (default: 31, for config/nvinfo: 125)
-| `psk.nvinfo.SPEED.FREQ`               | `psk.nvinfo.125.1000` (send NVinfo log as PSK-125 at 1kHz) | FREQ is 100-7000Hz (default: 800)
-| `cw.MESSAGE.WPM.FREQ`                 | `cw.hello.25.1000` (send message as 25WPM CW at 1kHz) | WPM is word per minute speed (5 to 40)
+SatCam can be commanded from the APRS link. It looks for `SATCAMERA:` keyword, followed by a command, case insensitive. Every HAM is allowed to use the following camera commands when the system is enabled.
+
+| Command syntax                        | Parameters |
+| ------------------------------------- | ---------- |
+| `satcamera:sstv.live.MODE.OVERLAY`              | MODE is `36` for Robot36, `72` for Robot72, `73` for MP73, `115` for MP115 (default: 36), OVERLAY is user-defined text, `.` and `{` not allowed, up to 13 chars (default: none)
+| `satcamera:psk.MESSAGE.SPEED.FREQ`              | MESSAGE is either user-defined text (`.` and `{` not allowed) or `nvinfo` or `config`, SPEED is `31`, `63`, `125`, `250`, `500`, `1000` (default: 31, for config/nvinfo: 125), FREQ is 100-7000Hz (default: 800)
+| `satcamera:cw.MESSAGE.WPM.FREQ`                 | MESSAGE is either user-defined text (`.` and `{` not allowed), WPM is word per minute speed (5 to 40), FREQ is 100-7000Hz (default: 800)
+
+| Command examples                      | Description |
+| ------------------------------------- | ----------- |
+| `satcamera:sstv.live`                 | Send live picture in Robot36
+| `satcamera:sstv.live.73`              | Send live picture in MP73
+| `satcamera:sstv.live.115.de OK2ALP`   | Send live picture in MP115, add overlay to image
+| `satcamera:psk.hello from space`      | Send message `PSAT3 hello from space` in PSK-31 at 800Hz carrier
+| `satcamera:psk.config`                | Send camera configuration in PSK-125 @ 800Hz
+| `satcamera:psk.nvinfo`                | Send camera runtime status in PSK-125 @ 800Hz
+| `satcamera:cw`                        | Send a welcome message `73 DE PSAT3 PSAT3 PSAT3 K` at 25WPM @ 800Hz
+| `satcamera:cw.morse forever.18`       | Send message `PSAT3 morse forever` at 18WPM @ 800Hz
 
