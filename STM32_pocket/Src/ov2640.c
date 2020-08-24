@@ -20,16 +20,20 @@
 #define INCLUDE_OV2640_REGS
 #include "ov2640_regs.h"
 
+#define i2c_delay()     for (uint8_t __delay = 0; __delay < i2c_delay_value; __delay++) __NOP();
+#define i2c_wscl(__x)   CAM_SCL_GPIO_Port->BSRR = CAM_SCL_Pin << ((__x) ? 0 : 16)
+#define i2c_wsda(__x)   CAM_SDA_GPIO_Port->BSRR = CAM_SDA_Pin << ((__x) ? 0 : 16)
+#define i2c_rsda()      (CAM_SDA_GPIO_Port->IDR & CAM_SDA_Pin)
 
-static uint8_t SCCB_Write(uint8_t addr, uint8_t data)
+#include "soft_i2c.h"
+
+
+static void SCCB_Write(uint8_t addr, uint8_t data)
 {
-    uint8_t ret;
-    uint8_t buf[] = {addr, data};
-
-    if (HAL_I2C_Master_Transmit(&hi2c2, SLAVE_ADDR, buf, 2, SCCB_TIMEOUT) != HAL_OK) {
-        return 0xFF;
-    }
-    return ret;
+    if (i2c_start_wait(SLAVE_ADDR+I2C_WRITE, SCCB_TIMEOUT) != 0) return;
+    i2c_write(addr);
+    i2c_write(data);
+    i2c_stop();
 }
 
 
@@ -37,12 +41,12 @@ static uint8_t SCCB_Read(uint8_t addr)
 {
     uint8_t data;
 
-    if (HAL_I2C_Master_Transmit(&hi2c2, SLAVE_ADDR, &addr, 1, SCCB_TIMEOUT) != HAL_OK) {
-        return 0xFF;
-    }
-    if (HAL_I2C_Master_Receive(&hi2c2, SLAVE_ADDR, &data, 1, SCCB_TIMEOUT) != HAL_OK) {
-        return 0xFF;
-    }
+    if (i2c_start_wait(SLAVE_ADDR+I2C_WRITE, SCCB_TIMEOUT) != 0) return 0xFF;
+    i2c_write(addr);
+    if (i2c_rep_start(SLAVE_ADDR+I2C_READ) != 0) return 0xFF;
+    data = i2c_read(0); // NAK
+    i2c_stop();
+
     return data;
 }
 
@@ -59,6 +63,8 @@ static void SCCB_Write_Multi(const uint8_t (*regs)[2])
 
 bool ov2640_enable(bool en)
 {
+    i2c_init();
+
     if (en) {
         /* check high speed core clock */
         if (__HAL_RCC_GET_SYSCLK_SOURCE() != RCC_SYSCLKSOURCE_STATUS_PLLCLK) return false;
@@ -221,19 +227,19 @@ uint8_t ov2640_get_register(uint8_t bank, uint8_t reg)
 }
 
 
-bool ov2640_hilevel_init(CONFIG_CAMERA cam)
+bool ov2640_hilevel_init(CONFIG_CAMERA *cam)
 {
     if (!ov2640_enable_safe(true)) return false;
 
-    ov2640_set_register(BANK_SEL_DSP, 0x44, cam.qs); // 0~100%, 255~0%, default 95%
+    ov2640_set_register(BANK_SEL_DSP, 0x44, cam->qs); // 0~100%, 255~0%, default 95%
 
     uint8_t reg13 = 0xc0; // banding off
-    if (cam.agc) reg13 |= 0x04; // AGC
-    if (cam.aec) reg13 |= 0x01; // AEC
+    if (cam->agc) reg13 |= 0x04; // AGC
+    if (cam->aec) reg13 |= 0x01; // AEC
     ov2640_set_register(BANK_SEL_SENSOR, 0x13, reg13);
 
-    if (cam.agc) {
-        switch (cam.agc_ceiling) {
+    if (cam->agc) {
+        switch (cam->agc_ceiling) {
             case 2: ov2640_set_register(BANK_SEL_SENSOR, 0x14, (0 << 5) | 0x08); break;
             case 4: ov2640_set_register(BANK_SEL_SENSOR, 0x14, (1 << 5) | 0x08); break;
             case 8: ov2640_set_register(BANK_SEL_SENSOR, 0x14, (2 << 5) | 0x08); break;
@@ -243,30 +249,30 @@ bool ov2640_hilevel_init(CONFIG_CAMERA cam)
             case 128: ov2640_set_register(BANK_SEL_SENSOR, 0x14, (6 << 5) | 0x08); break;
         }
     } else {
-        uint8_t reg00 = (cam.agc_manual) & 0xff;
-        uint8_t reg45 = (ov2640_get_register(BANK_SEL_SENSOR, 0x45) & 0x3f) | ((cam.agc_manual >> 2) & 0xc0);
+        uint8_t reg00 = (cam->agc_manual) & 0xff;
+        uint8_t reg45 = (ov2640_get_register(BANK_SEL_SENSOR, 0x45) & 0x3f) | ((cam->agc_manual >> 2) & 0xc0);
         ov2640_set_register(BANK_SEL_SENSOR, 0x00, reg00);
         ov2640_set_register(BANK_SEL_SENSOR, 0x45, reg45);
     }
 
-    if (!cam.aec) {
-        uint8_t reg04 = (ov2640_get_register(BANK_SEL_SENSOR, 0x04) & 0xfc) | (cam.aec_manual & 0x03);
-        uint8_t reg10 = (cam.aec_manual >> 2) & 0xff;
-        uint8_t reg45 = (ov2640_get_register(BANK_SEL_SENSOR, 0x45) & 0xc0) | ((cam.aec_manual >> 10) & 0x3f);
+    if (!cam->aec) {
+        uint8_t reg04 = (ov2640_get_register(BANK_SEL_SENSOR, 0x04) & 0xfc) | (cam->aec_manual & 0x03);
+        uint8_t reg10 = (cam->aec_manual >> 2) & 0xff;
+        uint8_t reg45 = (ov2640_get_register(BANK_SEL_SENSOR, 0x45) & 0xc0) | ((cam->aec_manual >> 10) & 0x3f);
         ov2640_set_register(BANK_SEL_SENSOR, 0x04, reg04);
         ov2640_set_register(BANK_SEL_SENSOR, 0x10, reg10);
         ov2640_set_register(BANK_SEL_SENSOR, 0x45, reg45);
     }
 
-    if (cam.rotate) {
+    if (cam->rotate) {
         uint8_t reg04 = (ov2640_get_register(BANK_SEL_SENSOR, 0x04) & 0xff) | 0xd0;
         ov2640_set_register(BANK_SEL_SENSOR, 0x04, reg04);
     }
 
-    ov2640_set_awb(cam.awb);
+    ov2640_set_awb(cam->awb);
 
     /* camera init delay - to adjust AGC, AEC and AWB */
-    for (uint16_t i = 0; i < cam.delay/50; i++) {
+    for (uint16_t i = 0; i < cam->delay/50; i++) {
         HAL_Delay(50);
         HAL_IWDG_Refresh(&hiwdg); // 50ms period
     }

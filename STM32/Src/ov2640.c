@@ -243,16 +243,16 @@ bool ov2640_hilevel_init(CONFIG_CAMERA cam)
             case 128: ov2640_set_register(BANK_SEL_SENSOR, 0x14, (6 << 5) | 0x08); break;
         }
     } else {
-        uint8_t reg00 = (cam.agc) & 0xff;
-        uint8_t reg45 = (ov2640_get_register(BANK_SEL_SENSOR, 0x45) & 0x3f) | ((cam.agc >> 2) & 0xc0);
+        uint8_t reg00 = (cam.agc_manual) & 0xff;
+        uint8_t reg45 = (ov2640_get_register(BANK_SEL_SENSOR, 0x45) & 0x3f) | ((cam.agc_manual >> 2) & 0xc0);
         ov2640_set_register(BANK_SEL_SENSOR, 0x00, reg00);
         ov2640_set_register(BANK_SEL_SENSOR, 0x45, reg45);
     }
 
     if (!cam.aec) {
-        uint8_t reg04 = (ov2640_get_register(BANK_SEL_SENSOR, 0x04) & 0xfc) | (cam.aec & 0x03);
-        uint8_t reg10 = (cam.aec >> 2) & 0xff;
-        uint8_t reg45 = (ov2640_get_register(BANK_SEL_SENSOR, 0x45) & 0xc0) | ((cam.aec >> 10) & 0x3f);
+        uint8_t reg04 = (ov2640_get_register(BANK_SEL_SENSOR, 0x04) & 0xfc) | (cam.aec_manual & 0x03);
+        uint8_t reg10 = (cam.aec_manual >> 2) & 0xff;
+        uint8_t reg45 = (ov2640_get_register(BANK_SEL_SENSOR, 0x45) & 0xc0) | ((cam.aec_manual >> 10) & 0x3f);
         ov2640_set_register(BANK_SEL_SENSOR, 0x04, reg04);
         ov2640_set_register(BANK_SEL_SENSOR, 0x10, reg10);
         ov2640_set_register(BANK_SEL_SENSOR, 0x45, reg45);
