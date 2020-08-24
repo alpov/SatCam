@@ -2,9 +2,9 @@
 
 SatCam in an SSTV encoder with OV2640 camera. It is based on STM32F446RET6 microcontroller. Supported SSTV modes are Robot36, Robot72, MP73 and MP115. SatCam was originally developed as a part of PSAT2 satellite project and later redesigned as a stand-alone module.
 
-![SatCam prototype photo](Docs/satcam_photo.jpg)
+![SatCam prototype photo](satcam_photo.jpg)
 
-[SatCam schematic](Eagle/satcam_v3_mini_sch.pdf) - [SatCam PCB](Eagle/satcam_v3_mini_tvalues.pdf)
+[SatCam schematic](../Eagle/satcam_v3_mini_sch.pdf) - [SatCam PCB](../Eagle/satcam_v3_mini_tvalues.pdf)
 
 SatCam can be commanded from e.g. an APRS link, the UART works at 9600 8N1. It looks for `SATCAMERA:` keyword, followed by a command, case insensitive. End of line is `<CR>`, `<LF>` or `{`. Empty lines and messages without proper keyword are ignored. All commands including the keyword are case insensitive. Example: `SatCamera:sstv.live.73<CR>`.
 
@@ -44,10 +44,10 @@ Silkscreen of `RXD` and `TXD` is mixed up on the 1st PCB revision. Current schem
 | transmitting audio, with short peaks              | 10.3mA
 
 ## Tested OV2640 modules
-* [AdvancedTech](https://www.aliexpress.com/item/32898143505.html): landscape, FOV ~50°, [example](Docs/ov2640_AdvancedTech.jpg)
-* [Your Cee Mini](https://www.aliexpress.com/item/33058626691.html): landscape, FOV ~60°, [example](Docs/ov2640_YourCeeMini.jpg)
-* [Your Cee Wide](https://www.aliexpress.com/item/33058626691.html): landscape, FOV ~120°, [example](Docs/ov2640_YourCeeWide.jpg)
-* [Alice1101983](https://www.aliexpress.com/item/32978120017.html), [ModuleFans](https://www.aliexpress.com/item/33042725935.html): portrait, [example](Docs/ov2640_Alice.jpg)
+* [AdvancedTech](https://www.aliexpress.com/item/32898143505.html): landscape, FOV ~50°, [example](ov2640_AdvancedTech.jpg)
+* [Your Cee Mini](https://www.aliexpress.com/item/33058626691.html): landscape, FOV ~60°, [example](ov2640_YourCeeMini.jpg)
+* [Your Cee Wide](https://www.aliexpress.com/item/33058626691.html): landscape, FOV ~120°, [example](ov2640_YourCeeWide.jpg)
+* [Alice1101983](https://www.aliexpress.com/item/32978120017.html), [ModuleFans](https://www.aliexpress.com/item/33042725935.html): portrait, [example](ov2640_Alice.jpg)
 
 ## SatCam commands
 
