@@ -165,7 +165,7 @@ uint16_t adc_read_light()
     // printf_debug("Light sensor corrected %ulx", lux_expanded);
 
     lux = 0;
-    while (lux_expand > 100) {
+    while (lux_expand >= 100) {
         lux += 100;
         lux_expand /= 10;
     }

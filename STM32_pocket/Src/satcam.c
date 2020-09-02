@@ -101,7 +101,7 @@ static bool camera_snapshot(void)
         (unsigned int)(HAL_GetTick() / 60000), adc_read_temperature(), (unsigned int)img_counter, light % 100, light / 100, voltage
     );
 
-    snprintf(img.overlay[OVERLAY_IMG], sizeof(img.overlay[OVERLAY_IMG]), "#%04u %uB g%u e%u", (unsigned int)img_counter, (int)img.length, agc, aec);
+    snprintf(img.overlay[OVERLAY_IMG], sizeof(img.overlay[OVERLAY_IMG]), "#%04u %uB g%u.%u e%u", (unsigned int)img_counter, (int)img.length, agc/10, agc%10, aec);
 
     return true;
 }

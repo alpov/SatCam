@@ -199,7 +199,10 @@ uint16_t ov2640_get_current_agc(void)
     uint16_t reg00 = ov2640_get_register(BANK_SEL_SENSOR, 0x00);
     uint16_t reg45 = ov2640_get_register(BANK_SEL_SENSOR, 0x45);
 
-    return (reg00 | ((reg45 & 0xc0) << 2));
+    uint16_t gain1 = ((reg00 & 0xf0) >> 4 | ((reg45 & 0xc0) >> 2)) + 1;
+    uint16_t gain2 = ((reg00 & 0x0f)) + 1*16;
+
+    return (gain1 * gain2 * 10 / 16);
 }
 
 
