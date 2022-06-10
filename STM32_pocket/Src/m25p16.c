@@ -90,6 +90,7 @@ bool flash_init(void)
         flash_spi_read(id, 3);
         if (id[0] == M25P16_ID_MANUFACTURER && id[1] == M25P16_ID_DEVICE_HI && id[2] == M25P16_ID_DEVICE_LO) return true;
         if (id[0] == AT25SF161_ID_MANUFACTURER && id[1] == AT25SF161_ID_DEVICE_HI && id[2] == AT25SF161_ID_DEVICE_LO) return true;
+        if (id[0] == W25Q16JV_ID_MANUFACTURER && id[1] == W25Q16JV_ID_DEVICE_HI && id[2] == W25Q16JV_ID_DEVICE_LO) return true;
         syslog_event(LOG_FLASH_INIT_ERROR);
     }
     flash_fail = true;

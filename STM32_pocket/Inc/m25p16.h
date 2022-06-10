@@ -11,6 +11,11 @@
 #define AT25SF161_ID_DEVICE_HI     0x86
 #define AT25SF161_ID_DEVICE_LO     0x01
 
+// W25Q16JV flash identification
+#define W25Q16JV_ID_MANUFACTURER  0xEF
+#define W25Q16JV_ID_DEVICE_HI     0x70
+#define W25Q16JV_ID_DEVICE_LO     0x15
+
 #define M25P16_TIMEOUT_PAGE     6       // timeout [ms] for page write
 #define M25P16_TIMEOUT_SECTOR   3000    // timeout [ms] for sector erase
 #define M25P16_TIMEOUT_BULK     20000   // timeout [ms] for bulk erase

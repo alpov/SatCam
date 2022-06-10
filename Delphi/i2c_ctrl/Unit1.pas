@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls;
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Buttons;
 
 type
   TForm1 = class(TForm)
@@ -62,6 +62,8 @@ type
     RadioButton25: TRadioButton;
     RadioButton26: TRadioButton;
     RadioButton27: TRadioButton;
+    SpeedButton1: TSpeedButton;
+    Timer2: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -71,6 +73,8 @@ type
     procedure Button12Click(Sender: TObject);
     procedure Memo1Click(Sender: TObject);
     procedure Edit4Change(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
   private
     hFT: THandle;
     procedure WriteCommand(Command: Byte; Param: Byte);
@@ -346,6 +350,16 @@ end;
 procedure TForm1.Edit4Change(Sender: TObject);
 begin
   Label3.Caption := regNames[StrToIntDef(Edit4.Text, 0) div 2];
+end;
+
+procedure TForm1.SpeedButton1Click(Sender: TObject);
+begin
+  Timer2.Enabled := SpeedButton1.Down;
+end;
+
+procedure TForm1.Timer2Timer(Sender: TObject);
+begin
+  Button4.Click;
 end;
 
 end.

@@ -1,8 +1,8 @@
 object Form1: TForm1
   Left = 192
   Top = 107
-  Width = 677
-  Height = 684
+  Width = 679
+  Height = 694
   Caption = 'SatCam I2C control'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -57,6 +57,16 @@ object Form1: TForm1
     Height = 111
     Caption = ' SSTV '
     TabOrder = 3
+    object SpeedButton1: TSpeedButton
+      Left = 66
+      Top = 20
+      Width = 19
+      Height = 21
+      AllowAllUp = True
+      GroupIndex = 1
+      Caption = 'T'
+      OnClick = SpeedButton1Click
+    end
     object RadioButton1: TRadioButton
       Left = 100
       Top = 15
@@ -95,7 +105,7 @@ object Form1: TForm1
       Tag = 1
       Left = 10
       Top = 20
-      Width = 75
+      Width = 56
       Height = 21
       Caption = 'Robot36'
       TabOrder = 4
@@ -479,5 +489,12 @@ object Form1: TForm1
     OnTimer = Timer1Timer
     Left = 555
     Top = 290
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 45000
+    OnTimer = Timer2Timer
+    Left = 440
+    Top = 5
   end
 end
